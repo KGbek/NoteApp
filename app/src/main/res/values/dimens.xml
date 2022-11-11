@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marHorizontal">20dp</dimen>
+    <dimen name="TextSize">17sp</dimen>
+    <dimen name="TitleTextSize">20sp</dimen>
+    <dimen name="marTop">20dp</dimen>
+</resources>
