@@ -1,11 +1,6 @@
 package com.example.noteapp.data.local
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.noteapp.data.model.NoteEntity
 
 @Dao
@@ -18,7 +13,7 @@ interface NoteDao {
     suspend fun deleteNote(noteEntity: NoteEntity)
 
     @Update
-    suspend fun editNote(noteEntity: NoteEntity): NoteEntity
+    suspend fun editNote(noteId: NoteEntity)
 
     @Query("SELECT * FROM notes")
     suspend fun gAllNotes(): List<NoteEntity>

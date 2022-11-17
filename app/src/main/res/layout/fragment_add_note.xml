@@ -6,37 +6,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/title"
-        android:id="@+id/et_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginHorizontal="@dimen/marHorizontal"
-        android:textSize="@dimen/TextSize"/>
+        android:minHeight="48dp"
+        android:text="@string/title"
+        android:textSize="@dimen/TextSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_Desciption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/et_Desciption"
-        android:maxLines="10"
-        app:layout_constraintTop_toBottomOf="@id/et_title"
-        android:text="@string/description"
         android:layout_marginHorizontal="@dimen/marHorizontal"
-        app:layout_constraintStart_toStartOf="parent"
+        android:maxLines="10"
+        android:minHeight="48dp"
+        android:text="@string/description"
+        android:textSize="@dimen/TextSize"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/TextSize"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_title" />
 
     <Button
-        android:layout_width="match_parent"
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_add"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/save"
+        android:layout_marginTop="@dimen/marTop"
+        app:layout_constraintTop_toBottomOf="@id/et_Desciption"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/add_note"
-        android:layout_marginHorizontal="@dimen/marHorizontal"
-        android:layout_marginBottom="20dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,32 +1,40 @@
 package com.example.noteapp.presentation.fragments
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.noteapp.R
-import com.example.noteapp.data.model.NoteEntity
+import com.example.noteapp.databinding.NotesBinding
+import com.example.noteapp.domain.model.Note
 
-class NoteAdapter: RecyclerView.Adapter<NoteAdapter.Viewholder>() {
+class NoteAdapter(
+    private val onItemClick : (Note) -> Unit
+): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
-    val list = listOf<NoteEntity>()
+    private var list = listOf<Note>()
 
-
-    class Viewholder(itemView: View) :RecyclerView.ViewHolder(itemView) {
-        val tvTitle = itemView.findViewById<TextView>(R.id.tv_title)
-        val tvDescription = itemView.findViewById<TextView>(R.id.tv_description)
+    fun setData(list: List<Note>) {
+        this.list = list
+        notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.notes, parent,false)
-        return Viewholder(view)
+
+    inner class ViewHolder(private val binding: NotesBinding) :RecyclerView.ViewHolder(binding.root) {
+        fun onBind(note: Note) = with(binding) {
+            tvTitle.text = note.title
+            tvDescription.text = note.description
+            itemView.setOnLongClickListener {
+                onItemClick.invoke(note)
+                return@setOnLongClickListener true
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: Viewholder, position: Int) {
-        val noteEntity = list[position]
-        holder.tvTitle.text = noteEntity.title
-        holder.tvDescription.text = noteEntity.description
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(NotesBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.onBind(list[position])
     }
 
     override fun getItemCount(): Int {
