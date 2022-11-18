@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/marHorizontal"
         android:minHeight="48dp"
-        android:text="@string/title"
+        android:hint="@string/title"
         android:textSize="@dimen/TextSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,14 +24,14 @@
         android:layout_marginHorizontal="@dimen/marHorizontal"
         android:maxLines="10"
         android:minHeight="48dp"
-        android:text="@string/description"
+        android:hint="@string/description"
         android:textSize="@dimen/TextSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_title" />
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"

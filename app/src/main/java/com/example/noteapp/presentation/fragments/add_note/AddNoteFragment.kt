@@ -31,11 +31,9 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
     }
 
     private fun initialize() {
-        TODO("Not yet implemented")
     }
 
     private fun setupRequest() {
-        TODO("Not yet implemented")
     }
 
     private fun setupObservers() {
@@ -47,7 +45,8 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
 
                         }
                         is UIState.Success -> {
-                            findNavController().navigateUp()
+                            setupClickListeners()
+                            //findNavController().navigateUp()
                         }
                         is UIState.Error -> {
 
@@ -62,12 +61,16 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
     }
 
     private fun setupClickListeners() = with(binding) {
-        viewModel.addNote(
-            Note(
-                title = etTitle.text.toString(),
-                description = etDesciption.text.toString(),
-                createdAt = System.currentTimeMillis()
+        btnSave.setOnClickListener {
+            viewModel.addNote(
+                Note(
+                    title = etTitle.text.toString(),
+                    description = etDesciption.text.toString(),
+                    createdAt = System.currentTimeMillis()
+                )
             )
-        )
+            findNavController().navigateUp()
+        }
+
     }
 }

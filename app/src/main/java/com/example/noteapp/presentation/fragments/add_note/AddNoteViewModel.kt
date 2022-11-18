@@ -1,11 +1,15 @@
 package com.example.noteapp.presentation.fragments.add_note
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.noteapp.core.BaseViewModel
 import com.example.noteapp.core.Resource
 import com.example.noteapp.core.UIState
+import com.example.noteapp.data.repository.NoteRepositoryImpl
 import com.example.noteapp.domain.model.Note
 import com.example.noteapp.domain.usecase.AddNoteUseCase
+import com.example.noteapp.domain.usecase.DeleteNoteUseCase
+import com.example.noteapp.domain.usecase.EditNoteUseCase
+import com.example.noteapp.domain.usecase.GeAllNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
-    private val addNoteUseCase: AddNoteUseCase,
-) : ViewModel() {
+    private val addNoteUseCase: AddNoteUseCase
+) : BaseViewModel() {
 
     private val _addNoteState = MutableStateFlow<UIState<Unit>>(UIState.Empty())
     val addNoteState = _addNoteState.asStateFlow()
@@ -32,12 +36,11 @@ class AddNoteViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         if (resource.data != null) {
-                            UIState.Success(resource.data).also { _addNoteState.value = it }
+                            _addNoteState.value = UIState.Success(resource.data)
                         }
                     }
                 }
             }
         }
     }
-
 }

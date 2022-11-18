@@ -30,7 +30,11 @@ class NoteAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(NotesBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(NotesBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        ))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -14,20 +14,14 @@ import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(
     private val noteDao: NoteDao
-    ) : NoteRepository, BaseRepository() {
+) : NoteRepository, BaseRepository() {
 
     override fun addNote(note: Note): Flow<Resource<Unit>> = doRequest {
         noteDao.addNote(note.toNoteEntity())
     }
 
-    override fun deleteNote(note: Note): Flow<Resource<Unit>> = flow {
-        Resource.Loading(null)
-        try {
-            val data = noteDao.deleteNote(note.toNoteEntity())
-            Resource.Success(data)
-        } catch (ioException: IOException) {
-            Resource.Error(ioException.localizedMessage?: "Unknown error")
-        }
+    override fun deleteNote(note: Note): Flow<Resource<Unit>> = doRequest {
+        noteDao.deleteNote(note.toNoteEntity())
     }
 
     override fun editNote(note: Note): Flow<Resource<Note>> = flow {
@@ -36,7 +30,7 @@ class NoteRepositoryImpl @Inject constructor(
             val data = noteDao.editNote(note.toNoteEntity())
             Resource.Success(data)
         } catch (ioException: IOException) {
-            Resource.Error(ioException.localizedMessage?: "Unknown error")
+            Resource.Error(ioException.localizedMessage ?: "Unknown error")
         }
     }
 
@@ -46,7 +40,7 @@ class NoteRepositoryImpl @Inject constructor(
             val data = noteDao.gAllNotes().map { it.toNote() }
             Resource.Success(data)
         } catch (ioException: IOException) {
-            Resource.Error(ioException.localizedMessage?: "Unknown error")
+            Resource.Error(ioException.localizedMessage ?: "Unknown error")
         }
     }
 }

@@ -16,10 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
-
-    private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val getAllNotesUseCase: GeAllNotesUseCase,
     private val editNoteUseCase: EditNoteUseCase,
-    private val getAllNotesUseCase: GeAllNotesUseCase
+    private val deleteNoteUseCase: DeleteNoteUseCase
 ) : ViewModel() {
 
     private val _deleteNoteState = MutableStateFlow<UIState<Unit>>(UIState.Empty())
@@ -29,7 +28,7 @@ class NoteListViewModel @Inject constructor(
     val editNoteState = _editNoteState.asStateFlow()
 
     private val _getAllNotesState = MutableStateFlow<UIState<List<Note>>>(UIState.Empty())
-    val getAllListState = _getAllNotesState.asStateFlow()
+    val getAllNotesState = _getAllNotesState.asStateFlow()
 
 
     fun deleteNote(note: Note) {
@@ -43,7 +42,8 @@ class NoteListViewModel @Inject constructor(
                         _deleteNoteState.value = UIState.Error(resource.message!!)
                     }
                     is Resource.Success -> {
-                        _deleteNoteState.value = UIState.Success(resource.data!!)
+                        if (resource.data != null)
+                        _deleteNoteState.value = UIState.Success(resource.data)
                     }
                 }
             }
@@ -61,7 +61,8 @@ class NoteListViewModel @Inject constructor(
                         _editNoteState.value = UIState.Error(resource.message!!)
                     }
                     is Resource.Success -> {
-                        _editNoteState.value = UIState.Success(resource.data!!)
+                        if (resource.data != null)
+                        _editNoteState.value = UIState.Success(resource.data)
                     }
                 }
             }
@@ -79,7 +80,8 @@ class NoteListViewModel @Inject constructor(
                         _getAllNotesState.value = UIState.Error(resource.message!!)
                     }
                     is Resource.Success -> {
-                        _getAllNotesState.value = UIState.Success(resource.data!!)
+                        if (resource.data != null)
+                        _getAllNotesState.value = UIState.Success(resource.data)
                     }
                 }
             }

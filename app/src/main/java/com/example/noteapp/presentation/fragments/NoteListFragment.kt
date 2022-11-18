@@ -2,6 +2,7 @@ package com.example.noteapp.presentation.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -27,16 +28,16 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupObservers()
         initialize()
         setupRequest()
-        setupObservers()
         setupClickListeners()
     }
 
-    private fun initialize() {
-        binding.rvNotes.layoutManager =
+    private fun initialize() = with(binding){
+        rvNotes.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.rvNotes.adapter = noteAdapter
+        rvNotes.adapter = noteAdapter
     }
 
     private fun setupRequest() {
@@ -44,6 +45,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list) {
     }
 
     private fun setupObservers() {
+        //editNoteState
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.editNoteState.collect { state ->
@@ -64,19 +66,18 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list) {
                 }
             }
         }
-
+        //getAllNotesState
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.getAllListState.collect{state ->
+                viewModel.getAllNotesState.collect{ state ->
                     when(state) {
                         is UIState.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
+
                         }
                         is UIState.Error -> {
 
                         }
                         is UIState.Success -> {
-                            binding.progressBar.visibility = View.INVISIBLE
                             noteAdapter.setData(state.data)
                         }
                         is UIState.Empty -> {
@@ -86,7 +87,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list) {
                 }
             }
         }
-
+        //deleteNoteState
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.deleteNoteState.collect{ state ->
@@ -112,6 +113,7 @@ class NoteListFragment : Fragment(R.layout.fragment_note_list) {
     private fun setupClickListeners() {
         binding.btnFab.setOnClickListener {
             findNavController().navigate(R.id.addNoteFragment)
+            //Toast.makeText(requireContext(), "FAB is working", Toast.LENGTH_SHORT).show()
         }
     }
 

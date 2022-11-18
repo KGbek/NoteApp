@@ -2,7 +2,6 @@ package com.example.noteapp.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.example.noteapp.data.local.NoteDao
 import com.example.noteapp.data.local.NoteDataBase
 import com.example.noteapp.data.repository.NoteRepositoryImpl
@@ -22,7 +21,7 @@ object NoteModule {
     @Provides
     fun provideNoteDataBase(
         @ApplicationContext context: Context
-    ): RoomDatabase = Room.databaseBuilder(
+    ): NoteDataBase = Room.databaseBuilder(
         context,
         NoteDataBase::class.java,
         "note_db"
@@ -33,5 +32,7 @@ object NoteModule {
     fun provideNoteDao(noteDataBase: NoteDataBase) = noteDataBase.noteDao()
 
     @Provides
-    fun provideNoteRepository(noteDao: NoteDao): NoteRepository = NoteRepositoryImpl(noteDao)
+    fun provideNoteRepository(noteDao: NoteDao) : NoteRepository {
+        return NoteRepositoryImpl(noteDao)
+    }
 }
