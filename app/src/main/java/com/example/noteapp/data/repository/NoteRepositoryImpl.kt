@@ -16,31 +16,33 @@ class NoteRepositoryImpl @Inject constructor(
     private val noteDao: NoteDao
 ) : NoteRepository, BaseRepository() {
 
+    //We can do with return type
     override fun addNote(note: Note): Flow<Resource<Unit>> = doRequest {
         noteDao.addNote(note.toNoteEntity())
     }
 
-    override fun deleteNote(note: Note): Flow<Resource<Unit>> = doRequest {
+    //Also we can do without return type
+    override fun deleteNote(note: Note) = doRequest {
         noteDao.deleteNote(note.toNoteEntity())
     }
 
     override fun editNote(note: Note): Flow<Resource<Note>> = flow {
-        Resource.Loading(null)
+        emit(Resource.Loading(data = null))
         try {
             val data = noteDao.editNote(note.toNoteEntity())
             Resource.Success(data)
         } catch (ioException: IOException) {
-            Resource.Error(ioException.localizedMessage ?: "Unknown error")
+            emit(Resource.Error(ioException.localizedMessage ?: "Unknown error"))
         }
     }
 
     override fun getAllNotes(): Flow<Resource<List<Note>>> = flow {
-        Resource.Loading(data = null)
+        emit(Resource.Loading(data = null))
         try {
             val data = noteDao.gAllNotes().map { it.toNote() }
-            Resource.Success(data)
+            emit(Resource.Success(data))
         } catch (ioException: IOException) {
-            Resource.Error(ioException.localizedMessage ?: "Unknown error")
+            emit(Resource.Error(ioException.localizedMessage ?: "Unknown error"))
         }
     }
 }

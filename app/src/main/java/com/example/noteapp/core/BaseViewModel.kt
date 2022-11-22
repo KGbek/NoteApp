@@ -2,6 +2,7 @@ package com.example.noteapp.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -9,7 +10,7 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel : ViewModel() {
 
     protected fun <T> Flow<Resource<T>>.collectData(_state: MutableStateFlow<UIState<T>>) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             this@collectData.collect{ resource ->
                 when(resource) {
                     is Resource.Loading -> {
@@ -20,7 +21,7 @@ abstract class BaseViewModel : ViewModel() {
                     }
                     is Resource.Success -> {
                         if (resource.data != null) {
-                            UIState.Success(resource.data)
+                           _state.value = UIState.Success(resource.data)
                         }
                     }
                 }

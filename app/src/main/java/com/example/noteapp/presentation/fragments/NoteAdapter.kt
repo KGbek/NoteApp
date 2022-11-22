@@ -7,13 +7,15 @@ import com.example.noteapp.databinding.NotesBinding
 import com.example.noteapp.domain.model.Note
 
 class NoteAdapter(
+    private val onItemLongClick : (Note) -> Unit,
     private val onItemClick : (Note) -> Unit
 ): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
-    private var list = listOf<Note>()
+    private var mlist = mutableListOf<Note>()
 
     fun setData(list: List<Note>) {
-        this.list = list
+        mlist.clear()
+        mlist.addAll(list)
         notifyDataSetChanged()
     }
 
@@ -23,8 +25,12 @@ class NoteAdapter(
             tvTitle.text = note.title
             tvDescription.text = note.description
             itemView.setOnLongClickListener {
-                onItemClick.invoke(note)
+                onItemLongClick.invoke(note)
                 return@setOnLongClickListener true
+            }
+            itemView.setOnClickListener {
+                onItemClick.invoke(note)
+                return@setOnClickListener
             }
         }
     }
@@ -38,11 +44,23 @@ class NoteAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.onBind(list[position])
+        holder.onBind(mlist[position])
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return mlist.size
+    }
+
+    fun delete(note: Note){
+        val position = mlist.indexOf(note)
+        mlist.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun edit(note: Note){
+        val position = mlist.indexOfFirst { it.createdAt == note.createdAt }
+        mlist[position] = note
+        notifyItemChanged(position)
     }
 
 }

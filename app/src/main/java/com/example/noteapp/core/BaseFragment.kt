@@ -1,5 +1,6 @@
 package com.example.noteapp.core
 
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -7,7 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class BaseFragment : Fragment() {
+abstract class BaseFragment(@LayoutRes private val layoutId: Int) : Fragment(layoutId) {
 
     protected fun <T> StateFlow<UIState<T>>.collectState(
         onError: (message: String) -> Unit,

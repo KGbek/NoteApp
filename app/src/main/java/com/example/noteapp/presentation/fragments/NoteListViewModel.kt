@@ -1,7 +1,8 @@
 package com.example.noteapp.presentation.fragments
 
-import androidx.lifecycle.ViewModel
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.noteapp.core.BaseViewModel
 import com.example.noteapp.core.Resource
 import com.example.noteapp.core.UIState
 import com.example.noteapp.domain.model.Note
@@ -9,6 +10,7 @@ import com.example.noteapp.domain.usecase.DeleteNoteUseCase
 import com.example.noteapp.domain.usecase.EditNoteUseCase
 import com.example.noteapp.domain.usecase.GeAllNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +21,7 @@ class NoteListViewModel @Inject constructor(
     private val getAllNotesUseCase: GeAllNotesUseCase,
     private val editNoteUseCase: EditNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _deleteNoteState = MutableStateFlow<UIState<Unit>>(UIState.Empty())
     val deleteNoteState = _deleteNoteState.asStateFlow()
@@ -32,59 +34,32 @@ class NoteListViewModel @Inject constructor(
 
 
     fun deleteNote(note: Note) {
-        viewModelScope.launch{
-            deleteNoteUseCase.deleteNote(note).collect { resource ->
-                when(resource) {
-                    is Resource.Loading -> {
-                        _deleteNoteState.value = UIState.Loading()
-                    }
-                    is Resource.Error -> {
-                        _deleteNoteState.value = UIState.Error(resource.message!!)
-                    }
-                    is Resource.Success -> {
-                        if (resource.data != null)
-                        _deleteNoteState.value = UIState.Success(resource.data)
-                    }
-                }
-            }
-        }
+        Log.d("----", "deleteNote")
+        deleteNoteUseCase.deleteNote(note).collectData(_deleteNoteState)
     }
 
     fun editNote(note: Note) {
-        viewModelScope.launch {
-            editNoteUseCase.editNote(note).collect { resource ->
-                when(resource) {
-                    is Resource.Loading -> {
-                        _editNoteState.value = UIState.Loading()
-                    }
-                    is Resource.Error -> {
-                        _editNoteState.value = UIState.Error(resource.message!!)
-                    }
-                    is Resource.Success -> {
-                        if (resource.data != null)
-                        _editNoteState.value = UIState.Success(resource.data)
-                    }
-                }
-            }
-        }
+        Log.d("-----", "editNote")
+        editNoteUseCase.editNote(note).collectData(_editNoteState)
     }
 
     fun getAllNotes() {
-        viewModelScope.launch {
-            getAllNotesUseCase.getAllNotes().collect {resource ->
-                when(resource) {
-                    is Resource.Loading -> {
-                        _getAllNotesState.value = UIState.Loading()
-                    }
-                    is Resource.Error -> {
-                        _getAllNotesState.value = UIState.Error(resource.message!!)
-                    }
-                    is Resource.Success -> {
-                        if (resource.data != null)
-                        _getAllNotesState.value = UIState.Success(resource.data)
-                    }
-                }
-            }
-        }
+        getAllNotesUseCase.getAllNotes().collectData(_getAllNotesState)
+//        viewModelScope.launch(Dispatchers.IO) {
+//            getAllNotesUseCase.getAllNotes().collect { resource ->
+//                when(resource) {
+//                    is Resource.Loading -> {
+//                        _getAllNotesState.value = UIState.Loading()
+//                    }
+//                    is Resource.Error -> {
+//                        _getAllNotesState.value = UIState.Error(resource.message!!)
+//                    }
+//                    is  Resource.Success -> {
+//                        if (resource.data != null)
+//                        _getAllNotesState.value = UIState.Success(resource.data)
+//                    }
+//                }
+//            }
+//        }
     }
 }

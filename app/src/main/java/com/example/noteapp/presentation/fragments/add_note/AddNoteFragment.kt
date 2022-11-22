@@ -2,7 +2,6 @@ package com.example.noteapp.presentation.fragments.add_note
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +9,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.noteapp.R
+import com.example.noteapp.core.BaseFragment
 import com.example.noteapp.core.UIState
 import com.example.noteapp.databinding.FragmentAddNoteBinding
 import com.example.noteapp.domain.model.Note
@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
+class AddNoteFragment : BaseFragment(R.layout.fragment_add_note) {
 
     private val binding by viewBinding(FragmentAddNoteBinding::bind)
     private val viewModel by viewModels<AddNoteViewModel>()
@@ -37,6 +37,17 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
     }
 
     private fun setupObservers() {
+//        viewModel.addNoteState.collectState(
+//            onLoading = {
+//
+//            },
+//            onError = {
+//
+//            },
+//            onSuccess = {
+//                findNavController().navigateUp()
+//            }
+//        )
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.addNoteState.collect { state ->
@@ -45,8 +56,7 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
 
                         }
                         is UIState.Success -> {
-                            setupClickListeners()
-                            //findNavController().navigateUp()
+                            findNavController().navigateUp()
                         }
                         is UIState.Error -> {
 
@@ -69,8 +79,6 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note) {
                     createdAt = System.currentTimeMillis()
                 )
             )
-            findNavController().navigateUp()
         }
-
     }
 }
