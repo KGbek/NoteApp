@@ -42,14 +42,7 @@ class NoteListFragment : BaseFragment(R.layout.fragment_note_list) {
     }
 
     private fun setupObservers() {
-        viewModel.editNoteState.collectState(
-            onLoading = { Toast.makeText(requireContext(),"Item touched", Toast.LENGTH_SHORT).show() },
-            onError = { },
-            onSuccess = {
-                noteAdapter.edit(it)
-                Toast.makeText(requireContext(),"Item touched", Toast.LENGTH_SHORT).show()
-            }
-        )
+
         viewModel.getAllNotesState.collectState(
             onLoading = { },
             onError = { },
@@ -80,7 +73,12 @@ class NoteListFragment : BaseFragment(R.layout.fragment_note_list) {
     }
 
     private fun onItemClick(note: Note){
-        viewModel.editNote(note)
-        noteAdapter.edit(note)
+        val bundle = Bundle()
+        bundle.putSerializable(ARG_EDIT_NOTE, note)
+        findNavController().navigate(R.id.addNoteFragment, bundle)
+    }
+
+    companion object {
+        const val ARG_EDIT_NOTE = "edi_note"
     }
 }

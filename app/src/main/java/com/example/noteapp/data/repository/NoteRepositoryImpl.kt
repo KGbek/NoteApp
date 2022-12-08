@@ -26,14 +26,8 @@ class NoteRepositoryImpl @Inject constructor(
         noteDao.deleteNote(note.toNoteEntity())
     }
 
-    override fun editNote(note: Note): Flow<Resource<Note>> = flow {
-        emit(Resource.Loading(data = null))
-        try {
-            val data = noteDao.editNote(note.toNoteEntity())
-            Resource.Success(data)
-        } catch (ioException: IOException) {
-            emit(Resource.Error(ioException.localizedMessage ?: "Unknown error"))
-        }
+    override fun editNote(note: Note): Flow<Resource<Unit>> = doRequest {
+        noteDao.editNote(note.toNoteEntity())
     }
 
     override fun getAllNotes(): Flow<Resource<List<Note>>> = flow {
